@@ -2,6 +2,7 @@
 import sys
 from PySide6.QtWidgets import QApplication
 from musicavatar.ui import MusicavatarWindow
+from musicavatar.team_bridge import install_team_modules
 
 
 def main():
@@ -9,6 +10,7 @@ def main():
     app.setApplicationName('Musicavatar')
     app.setOrganizationName('Musicavatar')
     window = MusicavatarWindow()
+    install_team_modules(window)
     window.show()
     return app.exec()
 

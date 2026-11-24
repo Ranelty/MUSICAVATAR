@@ -1,6 +1,6 @@
 """Avatar pixel art dibujado por código: liviano y sin recursos externos."""
 from __future__ import annotations
-from PySide6.QtCore import Qt, QTimer, QSize
+from PySide6.QtCore import Qt, QTimer, QSize, QRect
 from PySide6.QtGui import QColor, QPainter, QPixmap
 from PySide6.QtWidgets import QWidget
 from .avatar_parts import AvatarLook, draw_character
@@ -15,6 +15,9 @@ class AvatarCanvas(QWidget):
         self.playing = False
         self.look = AvatarLook()
         self.preview = preview
+        self._custom_background: QPixmap | None = None
+        self._background_fit = "cover"
+        self._background_dim = 0
         self.tick = 0
         self.setMinimumSize(172, 172)
         self.setMaximumHeight(355)
@@ -24,6 +27,17 @@ class AvatarCanvas(QWidget):
         self.timer.timeout.connect(self.advance_frame)
         if not preview:
             self.timer.start()
+
+    def set_background_image(self, pixmap: QPixmap | None, fit: str = 'cover', dim: int = 0):
+        """Fondo opcional independiente del avatar, sin alterar el sprite.
+
+        El archivo se carga solo una vez, desde el módulo de fondos; pintar
+        solo escala un pixmap pequeño a 64x64 para cuidar el rendimiento.
+        """
+        self._custom_background = pixmap if pixmap is not None and not pixmap.isNull() else None
+        self._background_fit = fit if fit in ('cover', 'contain') else 'cover'
+        self._background_dim = max(0, min(int(dim), 80))
+        self.update()
 
     def advance_frame(self):
         self.tick += 1
@@ -64,63 +78,79 @@ class AvatarCanvas(QWidget):
             'love': ('#50334d','#824b6c','#b96f8b','#f1b5bf'),
         }
         sky, mid, light, glow = moods.get(self.mood, moods['neutral'])
-        # Living room window and quiet landscape; each world has its own colors.
-        rect(0,0,64,64,sky)
-        rect(0,39,64,25,mid)
-        rect(0,44,64,20,'#26202c')
-        rect(0,57,64,7,'#1d1c29')
-        rect(6,7,52,31,'#0f121d')
-        rect(8,9,48,27,mid)
-        rect(8,24,48,12,sky)
-        rect(31,9,2,27,'#211a27')
-        rect(8,21,48,2,'#211a27')
-        # Outdoor city silhouette / window scene
-        rect(9,30,8,6,'#282b37'); rect(17,27,10,9,'#343442')
-        rect(37,29,8,7,'#2d303d'); rect(45,26,10,10,'#313441')
-        rect(10,11,4,4,glow)
-        if self.mood == 'happy':
-            rect(11,12,7,7,'#f9d981'); rect(12,11,5,9,'#f9d981')
-            for x,y in [(24,14),(28,18),(43,15),(49,20),(37,13)]: rect(x,y,1,1,'#f8e2aa')
-        elif self.mood in ('sad','calm'):
-            rect(12,12,5,5,'#d8d9d3')
-            rect(15,12,3,3,mid)
+        if self._custom_background is not None and not self.preview:
+            background = self._custom_background
+            mode = (Qt.AspectRatioMode.KeepAspectRatioByExpanding if self._background_fit == 'cover'
+                    else Qt.AspectRatioMode.KeepAspectRatio)
+            scaled = background.scaled(64, 64, mode,
+                        Qt.TransformationMode.SmoothTransformation)
+            if self._background_fit == 'cover':
+                x = max(0, (scaled.width()-64)//2)
+                y = max(0, (scaled.height()-64)//2)
+                p.drawPixmap(0, 0, scaled, x, y, 64, 64)
+            else:
+                x, y = (64-scaled.width())//2, (64-scaled.height())//2
+                p.drawPixmap(x, y, scaled)
+            if self._background_dim:
+                p.fillRect(QRect(0, 0, 64, 64), QColor(0, 0, 0, round(255*self._background_dim/100)))
         else:
-            rect(12,12,5,5,glow)
-        if self.mood == 'sad':
-            for n in range(18):
-                x = 9 + (n*13 + self.tick*2)%46
-                y = 10 + (n*7 + self.tick*3)%24
-                rect(x,y,1,3,'#789fc1')
-        # Shelf, lamps, floor rug.
-        rect(1,47,62,2,'#473849')
-        rect(4,48,14,2,'#755c63')
-        rect(4,50,3,9,'#473844'); rect(16,50,3,9,'#473844')
-        rect(45,48,15,2,'#755c63')
-        rect(47,50,3,10,'#453546'); rect(57,50,3,10,'#453546')
-        rect(17,60,31,2,'#55435f')
-        # Pixel plant on the left
-        rect(4,37,8,7,'#a7715d')
-        rect(5,43,6,2,'#79524b')
-        rect(7,27,2,12,'#4b8a71')
-        for x,y in [(4,30),(9,29),(3,34),(11,33),(6,26),(9,25)]: rect(x,y,4,3,'#5da082')
-        # Couch/chair
-        rect(19,39,28,18,'#403348')
-        rect(21,40,24,13,'#66516a')
-        rect(18,49,6,9,'#372b3f')
-        rect(44,49,6,9,'#372b3f')
-        rect(22,56,3,4,'#2c2535'); rect(43,56,3,4,'#2c2535')
-        if self.mood == 'sad' and self.stage >= 2 and self.playing:
-            # Dramatic outdoor scene, without expensive image effects.
-            rect(0,0,64,64,'#162332'); rect(0,40,64,24,'#263443')
-            for y in (43,47,52,58): rect(0,y,64,1,'#394858')
-            rect(43,19,15,28,'#2f3e49'); rect(43,16,15,4,'#4c515a'); rect(46,23,9,13,'#1c2931')
-            rect(8,46,8,10,'#5d6b6b'); rect(6,45,12,2,'#74817c'); rect(7,55,10,2,'#394951')
-            for bx in (23,30):
-                rect(bx,51,3,8,'#61775b'); rect(bx+1,49,1,3,'#8da88a')
-            for n in range(35):
-                x = (n*17 + self.tick*2)%64
-                y = (n*23+self.tick*4)%61
-                rect(x,y,1,3,'#7792b3')
+            # Living room window and quiet landscape; each world has its own colors.
+            rect(0,0,64,64,sky)
+            rect(0,39,64,25,mid)
+            rect(0,44,64,20,'#26202c')
+            rect(0,57,64,7,'#1d1c29')
+            rect(6,7,52,31,'#0f121d')
+            rect(8,9,48,27,mid)
+            rect(8,24,48,12,sky)
+            rect(31,9,2,27,'#211a27')
+            rect(8,21,48,2,'#211a27')
+            # Outdoor city silhouette / window scene
+            rect(9,30,8,6,'#282b37'); rect(17,27,10,9,'#343442')
+            rect(37,29,8,7,'#2d303d'); rect(45,26,10,10,'#313441')
+            rect(10,11,4,4,glow)
+            if self.mood == 'happy':
+                rect(11,12,7,7,'#f9d981'); rect(12,11,5,9,'#f9d981')
+                for x,y in [(24,14),(28,18),(43,15),(49,20),(37,13)]: rect(x,y,1,1,'#f8e2aa')
+            elif self.mood in ('sad','calm'):
+                rect(12,12,5,5,'#d8d9d3')
+                rect(15,12,3,3,mid)
+            else:
+                rect(12,12,5,5,glow)
+            if self.mood == 'sad':
+                for n in range(18):
+                    x = 9 + (n*13 + self.tick*2)%46
+                    y = 10 + (n*7 + self.tick*3)%24
+                    rect(x,y,1,3,'#789fc1')
+            # Shelf, lamps, floor rug.
+            rect(1,47,62,2,'#473849')
+            rect(4,48,14,2,'#755c63')
+            rect(4,50,3,9,'#473844'); rect(16,50,3,9,'#473844')
+            rect(45,48,15,2,'#755c63')
+            rect(47,50,3,10,'#453546'); rect(57,50,3,10,'#453546')
+            rect(17,60,31,2,'#55435f')
+            # Pixel plant on the left
+            rect(4,37,8,7,'#a7715d')
+            rect(5,43,6,2,'#79524b')
+            rect(7,27,2,12,'#4b8a71')
+            for x,y in [(4,30),(9,29),(3,34),(11,33),(6,26),(9,25)]: rect(x,y,4,3,'#5da082')
+            # Couch/chair
+            rect(19,39,28,18,'#403348')
+            rect(21,40,24,13,'#66516a')
+            rect(18,49,6,9,'#372b3f')
+            rect(44,49,6,9,'#372b3f')
+            rect(22,56,3,4,'#2c2535'); rect(43,56,3,4,'#2c2535')
+            if self.mood == 'sad' and self.stage >= 2 and self.playing:
+                # Dramatic outdoor scene, without expensive image effects.
+                rect(0,0,64,64,'#162332'); rect(0,40,64,24,'#263443')
+                for y in (43,47,52,58): rect(0,y,64,1,'#394858')
+                rect(43,19,15,28,'#2f3e49'); rect(43,16,15,4,'#4c515a'); rect(46,23,9,13,'#1c2931')
+                rect(8,46,8,10,'#5d6b6b'); rect(6,45,12,2,'#74817c'); rect(7,55,10,2,'#394951')
+                for bx in (23,30):
+                    rect(bx,51,3,8,'#61775b'); rect(bx+1,49,1,3,'#8da88a')
+                for n in range(35):
+                    x = (n*17 + self.tick*2)%64
+                    y = (n*23+self.tick*4)%61
+                    rect(x,y,1,3,'#7792b3')
         # Un personaje modular: piel, pelo, ropa, pantalones y zapatos por capas.
         bob = (self.tick//2)%2 if self.playing and self.mood in ('happy','energy') else 0
         ax, ay = 31, 27 - bob
