@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.pytest_cache/
+# Base de datos y arte local del usuario
+/data/*
+!/data/.gitkeep
+# Metadatos del IDE
+.vscode/
+.idea/
+# Distribuciones
+build/
+dist/
+*.spec
+# Archivos musicales del usuario (no subir su biblioteca privada)
+*.mp3
+*.m4a
+*.flac
+*.ogg
+*.oga
+*.aac
+*.opus
+*.wma
+*.wav
+!/demo/*.wav
+!/demo/*.mp3
