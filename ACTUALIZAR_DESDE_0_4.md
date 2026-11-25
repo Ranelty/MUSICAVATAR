@@ -33,7 +33,3 @@ No necesitas instalar bibliotecas nuevas: la personalización utiliza PySide6, q
 3. Cierra y vuelve a abrir Musicavatar: las selecciones deben permanecer.
 4. Cierra Personalizar con la X: regresa la cola de reproducción.
 5. Verifica que «Biblioteca», «Listas» y reproducción se mantienen intactas.
-
-## Nota
-
-La carga de una fotografía/imagen de fondo **todavía no está implementada**: la reservamos para una siguiente actualización. Para mantener el consumo bajo, el personaje usa solo figuras de píxeles, sin texturas externas pesadas. No hemos modificado el visualizador, así que puedes seguir dejándolo apagado.

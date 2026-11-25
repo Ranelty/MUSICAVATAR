@@ -1,51 +1,42 @@
-# Pruebas funcionales y capturas para la entrega
+# Musicavatar — Guía de pruebas y tres evidencias requeridas
 
-## Prueba exitosa 1 — Importar y reproducir
+La consigna solicita **tres capturas de la aplicación ejecutándose**: **dos casos exitosos** y **un caso de manejo de error**. Las siguientes son pruebas propuestas, **no evidencias ya realizadas**. Las capturas deben obtenerse del programa funcionando en Windows.
 
-1. Abre Musicavatar con `py main.py`.
-2. Haz clic en **Importar carpeta** y elige `demo/`.
-3. Verifica que aparezcan dos pistas, los títulos, el artista *Musicavatar Demo*, el género y las carátulas.
-4. Haz doble clic en **Amanecer en píxeles**.
-5. **Resultado esperado:** se oye audio, el progreso cambia y el avatar muestra *Alegre* con fondo cálido.
-6. **Evidencia:** captura real de la interfaz mientras reproduce la canción.
+## Evidencia 1: importación y reproducción (éxito)
 
-## Prueba exitosa 2 — Modificación manual
+1. Abrir Musicavatar con `py main.py`.
+2. Seleccionar **Importar carpeta**, abrir la carpeta `demo/` y comprobar que aparezcan las pistas.
+3. Reproducir **Amanecer en píxeles**.
+4. **Resultado esperado:** se escucha el audio, aparece el título y se actualiza el indicador de progreso y la emoción.
+5. Guardar la captura como `evidencia_01_reproduccion.png`.
 
-1. Haz doble clic en **Lluvia en la ventana**.
-2. Confirma que aparece el ánimo *Melancólico* y un tono azul/gris suave.
-3. En **Cambiar emoción**, selecciona *Tranquilo*.
-4. **Resultado esperado:** la app actualiza el ánimo y el color, sin que deje de sonar la canción. La selección se conserva tras reiniciar.
-5. **Evidencia:** segunda captura real de reproducción o personalización.
+## Evidencia 2: contribuciones del equipo (éxito)
 
-## Prueba de error — Archivo inexistente
+1. Tras fusionar los Pull Requests, abrir **Créditos** y comprobar los tres nombres. Tomar una captura del diálogo.
+2. En **Personalizar**, elegir una imagen local compatible como fondo del avatar, probar **Rellenar / Ajustar**, cerrar y reabrir Musicavatar, y verificar que la selección persiste.
+3. Guardar al menos la captura del escenario personalizado como `evidencia_02_fondo_avatar.png`. La captura de Créditos puede incluirse como **evidencia complementaria**.
 
-1. Importa uno de los archivos de `demo/`.
-2. Cierra la aplicación y **cambia temporalmente de nombre** ese archivo desde el explorador de Windows.
-3. Abre Musicavatar e intenta reproducir la pista que sigue registrada.
-4. **Resultado esperado:** mensaje **«Archivo no encontrado»**, sin cierre inesperado. 
-5. **Evidencia:** captura real con la advertencia en pantalla.
-6. **Restaurar:** devuelve al archivo su nombre original.
+## Evidencia 3: validación de error (controlado)
 
-## Otras pruebas recomendadas
+1. Importar una pista local desde `demo/`.
+2. Cerrar Musicavatar y cambiar temporalmente el nombre de **ese archivo de prueba** desde el Explorador de Windows.
+3. Volver a abrir la aplicación y solicitar reproducir la pista registrada.
+4. **Resultado esperado:** Musicavatar informa que el archivo no existe y no se cierra inesperadamente.
+5. Guardar la captura como `evidencia_03_archivo_inexistente.png`.
+6. Restaurar el nombre del archivo de prueba para que vuelva a funcionar.
 
-- Repetir una importación: no se duplica la canción.
-- Seleccionar una carpeta sin audio: mensaje «Sin canciones».
-- Crear una lista vacía o con nombre ya existente: se rechaza de manera controlada.
-- Marcar favoritos, filtrar por búsqueda, cambiar temas, pausar y reanudar.
-- Probar MP3, FLAC y M4A locales: identificar archivos que fallen por codecs, sin confundirlos con los resultados de éxito.
+## Tabla de resultados para completar después de ejecutarlas
 
-**No adjuntamos capturas simuladas como si fueran la ejecución real:** las tres imágenes deben tomarse en la computadora del equipo al realizar estas pruebas.
+| Caso | Resultado esperado | Resultado observado | Estado | Evidencia |
+|---|---|---|---|---|
+| Importar y reproducir | Audio, metadatos y avatar actualizados | Pendiente | Pendiente | `evidencia_01_reproduccion.png` |
+| Fondo personalizado y créditos | Se aplica fondo y están visibles los créditos | Pendiente | Pendiente | `evidencia_02_fondo_avatar.png` + opcional Créditos |
+| Archivo inexistente | Advertencia sin cierre inesperado | Pendiente | Pendiente | `evidencia_03_archivo_inexistente.png` |
 
-## Pruebas nuevas de la versión 0.2
+## Verificación adicional de los módulos
 
-1. **Inicio distinto de Biblioteca:** al pulsar Inicio deben aparecer top 3 de pistas y listas; Biblioteca debe mostrar la tabla.
-2. **Cola completa:** vacía la cola, pulsa **Reponer todas**; deben recuperarse todas las canciones sin reimportarlas. En Biblioteca, **Reproducir todo** debe sustituir la cola por todas las canciones visibles filtradas.
-3. **Listas:** crea una lista, añade 3 canciones y haz doble clic en la segunda: la cola debe contener la segunda y la tercera, en ese orden.
-4. **Selección múltiple:** Ctrl: selecciona pista 3, luego pista 1 y pista 5; clic derecho → Añadir a cola debe agregarlas en orden 3→1→5. Shift: selecciona rango 2–5 y agrégalo, debe quedar 2→3→4→5.
-5. **Historial aleatorio:** enciende Aleatorio (resalte visible), reproduce 3 canciones y pulsa Anterior; debe volver a la última escuchada, no a la fila anterior de la cola.
-6. **Emoción manual:** durante reproducción cambia varias veces el Combo de emoción; no debe dejar de responder la interfaz ni detenerse el audio.
-7. **Varios géneros:** clic derecho → Editar géneros → escribe `Rock, Pop`; el filtro Rock y el filtro Pop deben mostrar esa canción.
-8. **Tamaños:** arrastra el divisor horizontal (central/cola) y vertical (avatar/tabla), cierra Musicavatar, vuelve a abrirlo; deben conservarse los tamaños guardados.
-9. **Iconos:** comprueba que los botones reproducir, pausa, siguiente, anterior, aleatorio, repetir y volumen son iconos vectoriales y no emojis dependientes de la fuente.
+- Christofer: los nombres corresponden a la lista del equipo, la ventana cierra bien y la reproducción continúa.
+- Ángel Mario: PNG/JPG/WEBP válidos, imágenes inválidas rechazadas, ajuste, oscurecimiento, restauración y persistencia de la imagen guardada.
+- Rafael: imports, reproducción, pausa, cola, filtros y migraciones de SQLite.
 
-> Importante: estas son **pruebas manuales pendientes de ejecutar en el equipo con Windows**; no se presentan como evidencias ya obtenidas.
+**No generar capturas ficticias:** usar exclusivamente evidencias reales del programa durante la prueba.

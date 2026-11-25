@@ -1,52 +1,57 @@
-# Musicavatar — Plan de implementación
+# Musicavatar — Plan de implementación (Unidad 5)
 
-**Asignatura:** Ingeniería de Software II · **Fase:** De la arquitectura al código ejecutable (Unidad 5) · **Lenguaje:** Python
+**Asignatura:** Ingeniería de Software II  
+**Actividad:** De la Arquitectura al Código Ejecutable: Fase de Construcción  
+**Lenguaje:** Python  
+**Equipo:** Rafael Gabriel Jiménez Espinosa, Christofer Alberto Rodríguez Ocaña y Ángel Mario Presenda Alpuche.
 
-## Estrategia de construcción: abajo hacia arriba (bottom-up)
+## 1. Estrategia de construcción: abajo hacia arriba (bottom-up)
 
-1. Primero construimos las clases base (`Track`, `MusicDatabase`) y las funciones que extraen metadatos de archivos locales.
-2. Después integramos reproducción y un controlador de estados emocionales con pruebas de datos y validación de errores.
-3. Finalmente conectamos estos módulos a la interfaz PySide6 y verificamos el flujo completo importación → reproducción → avatar.
+1. Primero se programaron los modelos de datos (`Track`), el acceso a SQLite (`MusicDatabase`) y las rutinas para leer archivos musicales y sus metadatos.
+2. Después se integraron el motor de audio (`AudioPlayer`), la cola (`PlaybackQueue`) y el cálculo de estados emocionales (`MoodSession`), con validaciones y pruebas unitarias.
+3. Finalmente se conectaron los módulos a la interfaz (`MusicavatarWindow`), el avatar (`AvatarCanvas`) y las extensiones independientes del equipo.
 
-## Caso de uso principal: Reproducir una canción local
+Esta estrategia permite verificar cada componente antes de usarlo en la interfaz gráfica.
 
-**Actor:** Usuario. **Precondición:** La aplicación se abre correctamente y el archivo musical existe en el disco.
+## 2. Distribución definitiva de responsabilidades
 
-1. Selecciona una carpeta o un archivo compatible.
-2. El lector de metadatos valida ruta/extensión y extrae título, artista, álbum, género, duración y portada.
-3. `MusicDatabase.add_track()` registra una canción evitando duplicados.
-4. El usuario hace doble clic sobre la canción en la biblioteca o en la cola.
-5. `AudioPlayer.load_and_play()` intenta reproducirla y reporta errores; el controlador actualiza información, barra de progreso y escena del avatar.
-6. `get_track_mood()` utiliza el género o la categoría manual para determinar el ambiente visual.
-
-**Validaciones:** carpeta vacía, archivo ausente, extensión no aceptada, duplicados, listas sin nombre y posible fallo del motor de audio.
-
-## Distribución sugerida para un equipo de 3 integrantes
-
-| Integrante (asignar nombre real) | Módulo / responsabilidad | Entregable verificable |
+| Integrante | Área asignada | Archivos y evidencia de aportación |
 |---|---|---|
-| Integrante 1 (coordinación) | `models.py`, `database.py`, `queue_logic.py`, `track_table.py`, `player.py`, integración de `ui.py` | Reproducción local, interfaz, base de datos y commit |
-| Integrante 2 | `genres.py`, `moods.py`, `tests/test_genres.py`, `tests/test_moods.py` | Etiquetas de género múltiples, clasificación de emoción y pruebas; commit independiente |
-| Integrante 3 | `utils.py`, `tests/test_utils.py` y documentación de escenarios | Funciones de formato, pruebas y evidencia; commit independiente |
+| **Rafael Gabriel Jiménez Espinosa** | Desarrollo principal, coordinación e integración de componentes | `musicavatar/models.py`, `database.py`, `player.py`, `queue_logic.py`, `moods.py`, `avatar.py`, `avatar_parts.py`, `ui.py`, `main.py`, `team_bridge.py` y pruebas del núcleo; participación acreditada por sus commits. |
+| **Christofer Alberto Rodríguez Ocaña** | Créditos y apartado «Acerca de» | `musicavatar/contrib/credits.py`, `credits_info.py`, `tests/test_contrib_credits.py` y `GUIA_COMPANERO_1_CREDITOS.md`; commit y Pull Request propios. |
+| **Ángel Mario Presenda Alpuche** | Fondos personalizados del avatar | `musicavatar/contrib/avatar_backgrounds.py`, `background_rules.py`, `tests/test_contrib_backgrounds.py` y `GUIA_COMPANERO_2_FONDOS.md`; commit y Pull Request propios. |
 
-Si son **2 integrantes**, unir las responsabilidades 2 y 3, sin alterar los nombres de módulos. Todas las contribuciones deben revisarse y probarse antes del `git push`.
+**Estado de integración:** los dos módulos complementarios fueron preparados en paquetes independientes; su incorporación efectiva al repositorio y la autoría de los commits deben verificarse en GitHub. No presentar un archivo o commit de otra persona como evidencia propia.
 
-## Entregables y criterios de verificación
+## 3. Caso de uso completo: importar y reproducir canción local
 
-- Código ejecutable y caso de uso completo (abrir música → reproducir → actualizar avatar).
-- Diagrama UML propuesto en `docs/DIAGRAMA_CLASES.md`, actualizado a las clases realmente implementadas.
-- Matriz de correspondencia en `docs/MATRIZ_TRAZABILIDAD.md`.
-- Tres capturas **reales**: dos casos exitosos y un error controlado (`docs/PRUEBAS.md`).
-- Repositorio compartido, con al menos un commit **real** por integrante, según la consigna.
+**Actor principal:** usuario.  
+**Precondición:** Musicavatar está abierto, el motor de audio está disponible y el archivo existe en el dispositivo.
 
-> **Nota de trazabilidad:** la consigna pide utilizar el diagrama original de la Unidad 4. Como aquí no se recibió ese diagrama específico, se incluye una propuesta correspondiente a la implementación. Antes de entregar, verificar con el diseño real de la Unidad 4 y documentar cambios, si existen.
+1. El usuario selecciona **Importar carpeta** o **Añadir archivos**.
+2. `metadata.scan_paths()` localiza archivos compatibles y `metadata.read_track()` lee duración, título, artista, álbum, géneros y portada cuando están disponibles.
+3. `MusicDatabase.add_track()` registra las canciones en la biblioteca y controla duplicados.
+4. `MusicavatarWindow.refresh_library()` presenta los resultados y permite filtrar.
+5. El usuario elige una canción o pulsa **Reproducir todo**; `PlaybackQueue` organiza el orden de reproducción.
+6. `MusicavatarWindow.play_track()` llama a `AudioPlayer.load_and_play()`.
+7. `get_track_mood()` interpreta el género o la preferencia manual; `AvatarCanvas.set_state()` actualiza el personaje sin detener el audio.
 
-## Ampliación V0.2 (correcciones funcionales)
+**Salidas:** audio reproducido, nombre/artista/portada de la canción, tiempo de reproducción, cola y estado visual del avatar.
 
-- Se separó `Inicio` de `Biblioteca`: avatar, top 3 de canciones y top 3 listas con accesos directos.
-- Se agregó `PlaybackQueue` para mantener cola, historial, aleatorio y repetición sin depender de la vista de la tabla.
-- Se implementaron filtros y vista eficiente Qt mediante `TrackModel` y `TrackFilter`, con selección múltiple y acciones por lotes.
-- SQLite recibió columnas `play_count` por migración aditiva, conservando datos anteriores.
-- Se incorporaron iconos vectoriales, fondos por emoción con mosaicos estáticos y divisores de tamaño ajustable.
+**Errores controlados:** archivos inexistentes, rutas sin música, formatos no compatibles, fallos del motor de audio, nombres de lista vacíos o duplicados, imágenes de fondo inválidas.
 
-**Estado de pruebas:** el núcleo se comprueba con `py -m unittest discover -s tests -v`. Las pruebas de interfaz y audio en Windows deben registrarse con capturas reales; las comprobaciones de modelo Qt incluidas se ejecutan cuando PySide6 está instalado.
+## 4. Casos de uso complementarios del equipo
+
+**Créditos (Christofer):** abrir la opción **Créditos** de la barra lateral y consultar integrantes, versión, descripción y tecnologías; cerrar la ventana sin afectar la reproducción.
+
+**Fondo del avatar (Ángel Mario):** abrir **Personalizar**, seleccionar PNG/JPG/WEBP local, escoger **Rellenar** o **Ajustar**, ajustar oscurecimiento, persistir opciones y restaurar el escenario predeterminado. El fondo del avatar es independiente del tema general del reproductor.
+
+## 5. Entregables
+
+- Código completo ejecutable en el repositorio compartido.
+- Diagrama de clases y correspondencia diseño-código en `docs/`.
+- Matriz de trazabilidad con implementaciones y ajustes documentados.
+- Tres capturas **reales** de ejecución: dos operaciones exitosas y una que muestre manejo de error.
+- Al menos un commit **real** de cada integrante, visible en GitHub.
+- Pruebas unitarias y pruebas manuales de integración.
+

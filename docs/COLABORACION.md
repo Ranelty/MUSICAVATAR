@@ -1,29 +1,20 @@
-# Guía para los commits de los compañeros
+# Musicavatar — Colaboración y evidencia de control de versiones
 
-## Objetivo
+## Responsabilidades ya actualizadas
 
-Que **cada integrante participe con cambios verificables**, sin tocar simultáneamente `ui.py`, `database.py` ni `player.py`, que son las partes más propensas a provocar conflictos.
+| Persona | Paquete | Rama sugerida | Archivos propios |
+|---|---|---|---|
+| **Rafael Gabriel Jiménez Espinosa** | Desarrollo principal e integración | `main` | Núcleo de `musicavatar/`, `main.py`, `team_bridge.py`, documentación integradora. |
+| **Christofer Alberto Rodríguez Ocaña** | Créditos y Acerca de | `feature/creditos` | `musicavatar/contrib/credits.py`, `credits_info.py`, `tests/test_contrib_credits.py` y guía del módulo. |
+| **Ángel Mario Presenda Alpuche** | Fondos del avatar | `feature/fondos-avatar` | `musicavatar/contrib/avatar_backgrounds.py`, `background_rules.py`, `tests/test_contrib_backgrounds.py` y guía del módulo. |
 
-### Contribución pequeña A — Géneros y emociones
 
-**Archivo:** `musicavatar/moods.py`.
+| Integrante | Enlace real de commit / PR | Estado |
+|---|---|---|
+| Rafael Gabriel Jiménez Espinosa | Pendiente de pegar | Verificar autoría del commit principal |
+| Christofer Alberto Rodríguez Ocaña | Pendiente de pegar | Esperar commit y PR del módulo Créditos |
+| Ángel Mario Presenda Alpuche | Pendiente de pegar | Esperar commit y PR del módulo Fondos |
 
-1. Añadir al diccionario `GENRE_RULES` 2 o 3 géneros musicales que falten.
-2. Verificar el resultado con `py -m unittest discover -s tests -v`.
-3. Añadir una prueba de clasificación a `tests/test_moods.py`.
-4. Commit personal sugerido: `git add musicavatar/moods.py tests/test_moods.py` y `git commit -m "Ampliar generos y validar estados emocionales"`.
-
-### Contribución pequeña B — Formato y pruebas
-
-**Archivos:** `musicavatar/utils.py` y `tests/test_utils.py`.
-
-1. Mejorar las pruebas de `format_time()` para valores de 0, minutos, horas y entradas negativas.
-2. Añadir una función auxiliar pequeña sin dependencia de la interfaz, si el equipo identifica una necesidad real.
-3. Confirmar que las pruebas pasan.
-4. Commit personal sugerido: `git add musicavatar/utils.py tests/test_utils.py` y `git commit -m "Mejorar utilidades y pruebas de formato"`.
-
-### Flujo seguro
-
-Antes de modificar: `git pull`. Edita **solo tu módulo**, ejecuta las pruebas, haz `git add`, `git commit` y `git push`. Si el push se rechaza por cambios remotos, coordina con el equipo antes de resolver el conflicto. No subas `data/musicavatar.db`, portadas extraídas ni tu música personal.
-
-**No se han generado commits en nombre de los compañeros:** deben realizarlos desde sus propias cuentas.
+## Precauciones
+- No subir `data/musicavatar.db`, imágenes personales, canciones privadas, carpetas `__pycache__`.
+- No reemplazar el directorio `.git` ni usar `git push --force`.

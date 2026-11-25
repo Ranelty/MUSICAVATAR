@@ -22,13 +22,4 @@ py main.py
 - En **Biblioteca**, haz clic derecho en una sola canción de **prueba** y elige «Editar metadatos del archivo original…». Haz una copia de ese MP3 antes de editarlo.
 - Pon música y abre **Inicio** para revisar el avatar más grande, portadas de rankings y tiempo por emoción.
 
-## GitHub
 
-```powershell
-git status
-git add .
-git commit -m "Musicavatar v0.3: playlists y editor de metadatos"
-git push
-```
-
-**Nunca subas tu base SQLite privada ni tu biblioteca de audio.**

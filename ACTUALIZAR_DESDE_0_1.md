@@ -9,13 +9,4 @@
 7. Abre VS Code en la raíz del proyecto, con `main.py` al mismo nivel que `requirements.txt`, y ejecuta `py main.py`.
 8. Musicavatar detecta y añade automáticamente las columnas nuevas (`play_count`) a la base anterior. **No elimina tus canciones ni playlists.**
 
-## Para subir tus cambios
 
-```powershell
-git status
-git add .
-git commit -m "Mejorar reproductor Musicavatar v0.2"
-git push
-```
-
-No subas canciones privadas ni la base SQLite local. Cada compañero debe hacer su propio commit con su módulo.
