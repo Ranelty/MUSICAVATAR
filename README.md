@@ -124,22 +124,8 @@ Ejecuta:
 ```powershell
 py -m unittest discover -s tests -v
 ```
+**Documentación para el profe:** [`PLAN_IMPLEMENTACION.md`](PLAN_IMPLEMENTACION.md), [`docs/DIAGRAMA_CLASES.md`](docs/DIAGRAMA_CLASES.md), [`docs/MATRIZ_TRAZABILIDAD.md`](docs/MATRIZ_TRAZABILIDAD.md) y [`docs/COLABORACION.md`](docs/COLABORACION.md).
 
-Después toma **capturas reales de tu propia computadora**: (1) reproducción de la pista alegre, (2) reproducción de la pista melancólica o personalización y (3) error controlado, por ejemplo mover uno de los audios después de importarlo y pulsar reproducir. Encontrarás el guion en [`docs/PRUEBAS.md`](docs/PRUEBAS.md).
-
-**Documentación para el profesor:** [`PLAN_IMPLEMENTACION.md`](PLAN_IMPLEMENTACION.md), [`docs/DIAGRAMA_CLASES.md`](docs/DIAGRAMA_CLASES.md), [`docs/MATRIZ_TRAZABILIDAD.md`](docs/MATRIZ_TRAZABILIDAD.md) y [`docs/COLABORACION.md`](docs/COLABORACION.md).
-
-## 6. Subir el avance a GitHub
-
-Dentro de la carpeta local del repositorio (donde ya vinculaste `origin`):
-
-```powershell
-git add .
-git commit -m "Actualizar Musicavatar v0.3: listas, portadas y metadatos"
-git push
-```
-
-Cada integrante hará su **propio commit** con una mejora independiente. Para reducir conflictos, el equipo puede dividirse los archivos `moods.py`, `utils.py` y/o sus pruebas; lee `docs/COLABORACION.md`. En la entrega **no damos por hechos** commits que todavía no se hayan realizado.
 
 ## Limitaciones conocidas de esta versión
 
@@ -161,12 +147,8 @@ El analizador usa `numpy` y `imageio-ffmpeg` para decodificar audio PCM temporal
 
 En la opción **Editar metadatos del archivo original…** el campo Título cambia la etiqueta musical dentro del archivo. Si también quieres que cambie el nombre del archivo de Windows, marca la nueva opción **Renombrar también el archivo de audio**, desmarcada inicialmente. Haz una copia de seguridad antes de probar esta función. La biblioteca seguirá apuntando al archivo renombrado y conservará sus playlists, favoritos y estadísticas.
 
-Consulta `ACTUALIZAR_DESDE_0_3.md` antes de reemplazar la v0.3.
-
 ## Personalización del avatar (v0.5)
 
 Ve a **Personalizar** en la barra izquierda. Se abrirá el panel derecho, sustituyendo temporalmente la cola, y podrás elegir: presentación del personaje, estilo/color de cabello, tipo/color de prenda superior, pantalón, zapatos, tono de piel y accesorio. Cada categoría tiene 3 opciones de prueba (algunas paletas tienen más colores). Los cambios se reflejan al instante en el avatar y su vista previa y se guardan en SQLite para futuras sesiones.
 
 El avatar permanece en su mundo pixel art y **continúa reaccionando al estado emocional de la música**. El fondo del escenario todavía es el de prueba; la opción de usar una imagen propia se reserva para una actualización posterior. La pantalla de configuración del visualizador no ha cambiado: las barras siguen siendo opcionales.
-
-**Actualización desde v0.4:** lee `ACTUALIZAR_DESDE_0_4.md` y respalda `data/musicavatar.db` antes de reemplazar los archivos. No hace falta agregar nuevas bibliotecas ni importar nuevamente tus canciones.
